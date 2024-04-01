@@ -14,28 +14,6 @@ app.get("/", (req, res) => {
   res.send("Ajay Giri Goswami");
 });
 
-// // api routs for user
-// app.post("/contact", async (req, res) => {
-//   const { fname, lname, email, mobile, message } = req.body;
-//   try {
-//     const olduser = await users.findOne({ email: email });
-//     if (olduser) {
-//       res.json("existed");
-//     } else {
-//       users.insertMany({
-//         fname,
-//         lname,
-//         email,
-//         mobile,
-//         message,
-//       });
-//       res.status(201).json({ status: 201 });
-//     }
-//   } catch (error) {
-//     console.log(error + "data");
-//   }
-// });
-
 // email config
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -45,9 +23,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-//Contat user details
+//register user details
 app.post("/Contact", async (req, res) => {
   const { fname, lname, email, mobile, message } = req.body;
+
+  if (!fname || !lname || !email || !mobile) {
+    res.status(401).json({ status: 401, error: "All Input require" });
+  }
 
   try {
     const preuser = await users.findOne({ email: email });
@@ -56,7 +38,7 @@ app.post("/Contact", async (req, res) => {
       const mailOptions = {
         from: "ajay124767@gmail.com",
         to: email,
-        subject: "Thanks for Your Response",
+        subject: "Thanks for your Contact Us Request!",
         text: "Your Response Has Been Submitted",
       };
 
@@ -64,11 +46,9 @@ app.post("/Contact", async (req, res) => {
         if (error) {
           console.log("error" + error);
         } else {
-          // console.log("Email sent" + info.response);
           res.json("existed");
         }
       });
-      res.json("existed");
     } else {
       const finalUser = new users({
         fname,
@@ -91,15 +71,14 @@ app.post("/Contact", async (req, res) => {
         if (error) {
           console.log("error" + error);
         } else {
-          // console.log("Email sent" + info.response);
           res.status(201).json({ status: 201 });
         }
       });
       res.status(201).json({ status: 201, storeData });
     }
   } catch (error) {
-    // console.log("catch error", error);
-    res.json("error");
+    res.json("require");
+    console.log("error" + error);
   }
 });
 
