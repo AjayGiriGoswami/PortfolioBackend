@@ -46,7 +46,7 @@ app.post("/Contact", async (req, res) => {
         if (error) {
           console.log("error" + error);
         } else {
-          res.json("existed");
+          res.status(201).json({ status: 201});
         }
       });
     } else {
