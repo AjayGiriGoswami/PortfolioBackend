@@ -27,10 +27,6 @@ const transporter = nodemailer.createTransport({
 app.post("/Contact", async (req, res) => {
   const { fname, lname, email, mobile, message } = req.body;
 
-  if (!fname || !lname || !email || !mobile) {
-    res.status(401).json({ status: 401, error: "All Input require" });
-  }
-
   try {
     const preuser = await users.findOne({ email: email });
 
@@ -46,7 +42,7 @@ app.post("/Contact", async (req, res) => {
         if (error) {
           console.log("error" + error);
         } else {
-          res.status(201).json({ status: 201});
+          res.status(202).json({ status: 202});
         }
       });
     } else {
@@ -57,7 +53,6 @@ app.post("/Contact", async (req, res) => {
         mobile,
         messages: { message: message },
       });
-
       const storeData = await finalUser.save();
 
       const mailOptions = {
